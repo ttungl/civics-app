@@ -298,7 +298,6 @@ details[open]>summary .chev{transform:rotate(90deg)}
 .row-btn{width:100%;border:0;background:none;text-align:left;justify-content:space-between;text-decoration:none;color:var(--label)}
 .row-btn.danger{color:var(--red);justify-content:center;font-weight:500}
 .about-hero{text-align:center;padding:12px 0 8px}
-.about-hero img{width:72px;height:72px;border-radius:16px;box-shadow:var(--shadow-1)}
 .about-hero h1{margin-top:12px}
 .disclaimer{padding:16px;background:var(--orange-tint);border-radius:14px;margin-top:16px;font-weight:600;font-size:.9375rem}
 .prose p{margin-top:10px;font-size:.9375rem;color:var(--label-2)}
@@ -334,8 +333,9 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
   .side-brand img{display:block;width:100%;height:auto}
   .side-brand:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 }
-.about-logo{display:block;width:fit-content;max-width:100%;margin:4px auto 0;padding:14px 18px;border-radius:20px;background:#fff;box-shadow:var(--shadow-1);border:1px solid var(--card-border)}
-.about-logo img{display:block;width:min(320px,70vw);height:auto}
+/* About: transparent logo straight on the page; a recolored variant keeps it readable in dark mode. */
+.about-logo{display:block;width:fit-content;max-width:100%;margin:8px auto 0}
+.about-logo img{display:block;width:min(320px,76vw);height:auto}
 
 /* ---------- Color & motion (v1.1) ---------- */
 :root{--g1:#2563eb;--g2:#7c3aed;--g3:#db2777;--g4:#c2410c;
@@ -694,7 +694,7 @@ html.calm .confetti{display:none}
 <!-- ABOUT -->
 <section class="screen" id="screen-about" data-title="About" aria-labelledby="h-about" hidden>
   <div class="about-hero">
-    <h1 class="about-logo" id="h-about" tabindex="-1"><img src="logo.webp" alt="n400practice.com: Practice N-400 Interview Questions and Answers" width="320" height="199"></h1>
+    <h1 class="about-logo" id="h-about" tabindex="-1"><picture><source srcset="logo-clear-dark.webp" media="(prefers-color-scheme: dark)"><img src="logo-clear.webp" alt="n400practice.com: Practice N-400 Interview Questions and Answers" width="320" height="199"></picture></h1>
     <p class="footnote" style="margin-top:10px">Version <span id="app-version"></span></p>
   </div>
   <div class="disclaimer sr">Free study tool. Not affiliated with or endorsed by USCIS or the U.S. government.</div>
@@ -741,7 +741,7 @@ html.calm .confetti{display:none}
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.2.1';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
