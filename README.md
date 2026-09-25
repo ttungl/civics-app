@@ -2,7 +2,7 @@
 
 A free, private web app for studying all **128 questions of the official USCIS 2025 Civics Test**. It has flashcards with spaced repetition, a practice test that works like the real interview, and a searchable review list, and it works offline.
 
-**Live app:** https://ttungl.github.io/civics-app/
+**Live app:** https://n400practice.com/
 
 > Free study tool. Not affiliated with or endorsed by USCIS or the U.S. government.
 

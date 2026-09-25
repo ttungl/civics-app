@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-const URL = 'https://ttungl.github.io/civics-app/';
+const URL = 'https://n400practice.com/';
 const out = []; const ok = (n, c, i='') => out.push(`${c ? 'PASS' : 'FAIL'} ${n}${i !== '' ? ' :: ' + i : ''}`);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 (async () => {

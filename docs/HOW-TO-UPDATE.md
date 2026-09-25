@@ -45,7 +45,7 @@ The whole app lives in one file, **`index.html`**. To change an answer you:
 
 ### Step 3: Wait, then check
 * GitHub publishes your change in about **1–2 minutes**. You can watch the progress under the **Actions** tab (a green ✓ means it's live).
-* Open https://ttungl.github.io/civics-app/ and go to *Review*. Search for the question and confirm the new name.
+* Open https://n400practice.com/ and go to *Review*. Search for the question and confirm the new name.
 * Users get the update the **next time they open the app** while online.
 
 ---
