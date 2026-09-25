@@ -1,0 +1,19 @@
+# Feedback API for n400practice.com — deploy with:  npx wrangler deploy   (from this folder)
+name = "n400-feedback"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+# Served at https://api.n400practice.com (Cloudflare adds the DNS record; the main site's records are untouched).
+routes = [{ pattern = "api.n400practice.com", custom_domain = true }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "n400-feedback"
+database_id = "0f70715a-9819-41ba-bf1b-75106f95d65b"
+
+# At most 5 messages per minute from the same sender.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 5, period = 60 }

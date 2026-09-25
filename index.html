@@ -58,7 +58,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg);
 @media (min-width:900px){html{scroll-padding-bottom:16px}}
 body{margin:0;font-family:var(--font);font-size:1.0625rem;line-height:1.45;color:var(--label);background:var(--bg);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;min-height:100vh;min-height:100dvh}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--accent)}
 h1,h2,h3,p{margin:0}
@@ -317,6 +317,22 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 @media (min-width:900px){.toast{left:calc(50% + 120px);bottom:32px}}
 
 
+
+/* ---------- Feedback (v1.4) ---------- */
+#dlg-feedback{max-width:440px;width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:22px 20px}
+#dlg-feedback h2{text-align:left}
+#dlg-feedback .fb-sub{text-align:left;margin:6px 0 14px}
+.fb-label{display:block;font-size:.8125rem;font-weight:600;color:var(--label-2);margin:12px 0 6px}
+.fb-label span{font-weight:400}
+.fb-input{display:block;width:100%;border:1px solid var(--sep);border-radius:12px;background:var(--card-2);color:var(--label);font-size:1.0625rem;padding:10px 12px;min-height:44px}
+textarea.fb-input{resize:vertical;min-height:120px;line-height:1.4}
+.fb-input:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.fb-count{text-align:right!important;margin:4px 0 0!important;font-variant-numeric:tabular-nums}
+.fb-error{color:var(--red);font-size:.9375rem;font-weight:500;margin:10px 0 0}
+.fb-note{text-align:left!important;margin:14px 0!important}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+.report-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:6px;padding:0;border:0;background:none;color:var(--accent);font-size:.875rem;font-weight:500}
+.report-link svg.i{width:1em;height:1em}
 
 /* ---------- Voices (v1.3) ---------- */
 .voice-row{display:flex;align-items:center;gap:8px;min-height:56px;padding:4px 8px 4px 16px;position:relative}
@@ -703,11 +719,17 @@ html.calm .confetti{display:none}
     <button class="row row-btn" type="button" id="btn-voice-dl"><span id="voice-dl-label">Download this voice for offline use</span><span class="dl-status" id="voice-dl-status"></span></button>
   </div>
 
+  <h2 class="group-h" id="g-feedback">Feedback</h2>
+  <div class="list" role="group" aria-labelledby="g-feedback">
+    <button class="row row-btn" type="button" data-feedback><span>Send feedback</span><svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg></button>
+  </div>
+  <p class="footnote group-f">Found a problem with a question, or have an idea? We read every message.</p>
+
   <h2 class="group-h" id="g-data">Data</h2>
   <div class="list" role="group" aria-labelledby="g-data">
     <button class="row row-btn danger" type="button" id="btn-reset">Reset progress</button>
   </div>
-  <p class="footnote group-f">Everything stays on this device. Nothing is sent anywhere.</p>
+  <p class="footnote group-f">Everything stays on this device. Only feedback you choose to send leaves it.</p>
 
   <div class="list" style="margin-top:28px">
     <a class="row row-btn" href="#about"><span>About n400practice.com</span><svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
@@ -730,10 +752,12 @@ html.calm .confetti{display:none}
     <a class="row row-btn" href="https://www.uscis.gov/citizenship" target="_blank" rel="noopener"><span>uscis.gov/citizenship</span><svg class="i chev" aria-hidden="true"><use href="#i-ext"/></svg></a>
     <a class="row row-btn" href="https://www.uscis.gov/citizenship/testupdates" target="_blank" rel="noopener"><span>Civics test updates</span><svg class="i chev" aria-hidden="true"><use href="#i-ext"/></svg></a>
     <a class="row row-btn" href="https://www.uscis.gov/sites/default/files/document/questions-and-answers/2025-Civics-Test-128-Questions-and-Answers.pdf" target="_blank" rel="noopener"><span>Official 128 questions (PDF)</span><svg class="i chev" aria-hidden="true"><use href="#i-ext"/></svg></a>
+    <button class="row row-btn" type="button" data-feedback><span>Send feedback</span><svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg></button>
   </div>
   <h2 class="group-h">Privacy</h2>
   <div class="card prose" style="padding:16px">
     <p>No accounts, ads, cookies, tracking, or analytics. Your progress and your officials are saved only in this browser, on this device.</p>
+    <p>If you send feedback, only what you write (and your email, if you give one) is stored, so we can improve the app. We don’t collect your IP address or anything else about you.</p>
   </div>
   <h2 class="group-h">How the test works</h2>
   <div class="card prose" style="padding:16px">
@@ -744,6 +768,36 @@ html.calm .confetti{display:none}
 
 <div class="sr-only" id="sr" role="status" aria-live="polite"></div>
 <div class="toast" id="toast" aria-hidden="true"></div>
+
+<dialog id="dlg-feedback" aria-labelledby="fb-h">
+  <form id="fb-form" novalidate>
+    <h2 id="fb-h">Send feedback</h2>
+    <p class="fb-sub" id="fb-sub">Suggestions, problems, or anything else. We read every message.</p>
+    <label class="fb-label" for="fb-type">Type</label>
+    <select class="fb-input" id="fb-type">
+      <option value="suggestion">Suggestion</option>
+      <option value="question">Problem with a question</option>
+      <option value="bug">Something isn’t working</option>
+      <option value="other">Other</option>
+    </select>
+    <div id="fb-q-wrap" hidden>
+      <label class="fb-label" for="fb-q">Question number (1–128)</label>
+      <input class="fb-input" id="fb-q" type="number" min="1" max="128" inputmode="numeric">
+    </div>
+    <label class="fb-label" for="fb-msg">Message</label>
+    <textarea class="fb-input" id="fb-msg" rows="5" maxlength="2000" required aria-describedby="fb-count"></textarea>
+    <p class="footnote fb-count" id="fb-count">0 / 2000</p>
+    <label class="fb-label" for="fb-email">Email <span>(optional, if you’d like a reply)</span></label>
+    <input class="fb-input" id="fb-email" type="email" autocomplete="email" maxlength="254" inputmode="email">
+    <div class="hp" aria-hidden="true"><label for="fb-website">Website</label><input id="fb-website" type="text" tabindex="-1" autocomplete="off"></div>
+    <p class="fb-error" id="fb-error" role="alert" hidden></p>
+    <p class="footnote fb-note">We store only what you write here (and your email, if given). No IP address or tracking.</p>
+    <div class="stack">
+      <button class="btn btn-filled" type="submit" id="fb-send">Send</button>
+      <button class="btn btn-tinted" type="button" id="fb-cancel">Cancel</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="dlg-reset" aria-labelledby="dlg-h">
   <form method="dialog">
@@ -764,7 +818,7 @@ html.calm .confetti{display:none}
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.4.0';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
@@ -918,7 +972,7 @@ const QUESTIONS = [
   // ---------- Storage (fails safely) ----------
   const KEY = 'civics:v1';
   let storageOK = true;
-  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true, voice: 'heart' }, officials: {}, deck: 'all', cur: null, test: null });
+  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true, voice: 'heart' }, officials: {}, deck: 'all', cur: null, test: null, outbox: [] });
   function readStore() {
     try {
       localStorage.setItem('civics:t', '1'); localStorage.removeItem('civics:t');
@@ -937,6 +991,7 @@ const QUESTIONS = [
     if (typeof d.deck === 'string') S.deck = d.deck;
     if (BY_ID.has(d.cur)) S.cur = d.cur;
     if (d.test && Array.isArray(d.test.ids) && d.test.ids.every((i) => BY_ID.has(i))) S.test = d.test;
+    if (Array.isArray(d.outbox)) S.outbox = d.outbox.filter((x) => x && typeof x.message === 'string').slice(-20);
   })();
   let saveTimer = 0;
   function writeNow() { clearTimeout(saveTimer); if (!storageOK) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { storageOK = false; } }
@@ -1134,6 +1189,7 @@ const QUESTIONS = [
         (q.lookup ? `<br><a class="link-out" href="${esc(q.lookup.url)}" target="_blank" rel="noopener">Look it up on ${esc(q.lookup.label)}${icon('ext')}</a>` : '') + '</div>';
     }
     if (!compact || compact === 'tip') h += `<div class="tip">${icon('bulb')}<div><strong>Remember it</strong><p>${esc(q.explanation)}</p></div></div>`;
+    h += `<button class="report-link" type="button" data-report="${q.id}">${icon('warn')}Report a problem with this question</button>`;
     return h;
   }
   function spokenAnswer(q) {
@@ -1633,6 +1689,82 @@ const QUESTIONS = [
     updateVoiceDownload();
   });
 
+  // ---------- Feedback (Cloudflare Worker + D1, see worker/) ----------
+  const FEEDBACK_URL = 'https://api.n400practice.com/feedback';
+  const fb = $('#dlg-feedback');
+  async function postFeedback(item) {
+    const ctl = 'AbortController' in window ? new AbortController() : null;
+    const timer = setTimeout(() => ctl && ctl.abort(), 12000);
+    try {
+      const r = await fetch(FEEDBACK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(item), signal: ctl ? ctl.signal : undefined });
+      let msg = '';
+      try { msg = (await r.json()).error || ''; } catch (e) {}
+      return { ok: r.ok, status: r.status, msg };
+    } catch (e) {
+      return { ok: false, status: 0, msg: '' };   // offline or unreachable
+    } finally { clearTimeout(timer); }
+  }
+  let flushing = false;
+  async function flushOutbox() {
+    if (flushing || !S.outbox.length || navigator.onLine === false) return;
+    flushing = true;
+    while (S.outbox.length) {
+      const res = await postFeedback(S.outbox[0]);
+      if (res.ok || (res.status >= 400 && res.status < 500 && res.status !== 429)) { S.outbox.shift(); save(); }
+      else break;                               // still offline or rate-limited: try again later
+    }
+    flushing = false;
+  }
+  addEventListener('online', flushOutbox);
+  function openFeedback(opts = {}) {
+    if (!fb || typeof fb.showModal !== 'function') { toast('Feedback isn’t available in this browser.'); return; }
+    $('#fb-type').value = opts.questionId ? 'question' : 'suggestion';
+    $('#fb-q').value = opts.questionId || '';
+    $('#fb-msg').value = '';
+    $('#fb-email').value = '';
+    $('#fb-website').value = '';
+    $('#fb-error').hidden = true;
+    $('#fb-sub').textContent = opts.questionId ? `About question ${opts.questionId}: ${BY_ID.get(opts.questionId).question}` : 'Suggestions, problems, or anything else. We read every message.';
+    syncFeedbackForm();
+    fb.showModal();
+    $('#fb-msg').focus();
+  }
+  function syncFeedbackForm() {
+    $('#fb-q-wrap').hidden = $('#fb-type').value !== 'question';
+    $('#fb-count').textContent = `${$('#fb-msg').value.length} / 2000`;
+  }
+  $('#fb-type').addEventListener('change', syncFeedbackForm);
+  $('#fb-msg').addEventListener('input', syncFeedbackForm);
+  $('#fb-cancel').addEventListener('click', () => fb.close());
+  $('#fb-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = (m) => { const el = $('#fb-error'); el.textContent = m; el.hidden = false; };
+    const type = $('#fb-type').value;
+    const message = $('#fb-msg').value.trim();
+    const email = $('#fb-email').value.trim();
+    const q = parseInt($('#fb-q').value, 10);
+    if (message.length < 3) { err('Please write a little more.'); $('#fb-msg').focus(); return; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err('That email address looks incomplete.'); $('#fb-email').focus(); return; }
+    if (type === 'question' && $('#fb-q').value && !(q >= 1 && q <= 128)) { err('Question numbers go from 1 to 128.'); $('#fb-q').focus(); return; }
+    const item = { type, message, email, questionId: type === 'question' && q >= 1 && q <= 128 ? q : null, appVersion: APP_VERSION, website: $('#fb-website').value };
+    const send = $('#fb-send');
+    send.disabled = true; send.textContent = 'Sending…';
+    const res = await postFeedback(item);
+    send.disabled = false; send.textContent = 'Send';
+    if (res.ok) { fb.close(); toast('Thank you! Your feedback was sent.'); announce('Feedback sent'); return; }
+    if (res.status === 0) {
+      S.outbox.push(item); save(); fb.close();
+      toast('You’re offline. We’ll send it when you’re back online.');
+      return;
+    }
+    err(res.msg || 'Something went wrong. Please try again.');
+  });
+  document.addEventListener('click', (e) => {
+    const r = e.target.closest('[data-report]');
+    if (r) { e.preventDefault(); openFeedback({ questionId: +r.dataset.report }); return; }
+    if (e.target.closest('[data-feedback]')) { e.preventDefault(); openFeedback(); }
+  });
+
   const dlg = $('#dlg-reset');
   function doReset(clearOfficials) {
     const keep = { settings: S.settings, officials: clearOfficials ? {} : S.officials };
@@ -1657,7 +1789,7 @@ const QUESTIONS = [
   // ---------- Keyboard ----------
   document.addEventListener('keydown', (e) => {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (dlg && dlg.open) return;
+    if ((dlg && dlg.open) || (fb && fb.open)) return;
     const tag = e.target.tagName;
     if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || e.target.isContentEditable) return;
     const onControl = /^(BUTTON|A|SUMMARY)$/.test(tag);
@@ -1677,6 +1809,7 @@ const QUESTIONS = [
 
   const RENDER = { home: renderHome, study: renderStudy, test: renderTest, review: renderReview, settings: renderSettings, about: renderAbout };
   route(false);
+  setTimeout(flushOutbox, 1500);
 
   // ---------- Installable & offline (hosted over HTTPS only) ----------
   if (location.protocol === 'https:') {

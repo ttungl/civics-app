@@ -20,7 +20,7 @@ A free, private web app for studying all **128 questions of the official USCIS 2
 
 **65/20 mode:** if you are 65 or older and have been a permanent resident for 20+ years, turn this on in Settings. You'll study only the 20 ★ questions, and the practice test becomes 10 questions with 6 needed to pass.
 
-**Your privacy:** there are no accounts, ads, cookies, tracking, or analytics. Progress is saved only in your browser (localStorage) on your device. If your browser blocks storage (for example, some private windows), the app still works but won't remember your progress.
+**Your privacy:** there are no accounts, ads, cookies, tracking, or analytics. Progress is saved only in your browser (localStorage) on your device. The only thing that ever leaves the device is feedback you choose to send. If your browser blocks storage (for example, some private windows), the app still works but won't remember your progress.
 
 ## Installing on your phone
 
@@ -54,6 +54,12 @@ mkdir -p .kokoro && cd .kokoro && curl -LO https://github.com/thewh1teagle/kokor
 ```
 
 It needs `ffmpeg` (`brew install ffmpeg`). It records only missing clips and deletes out-of-date ones. Each file name contains a hash of its text, so if an answer is edited and not re-recorded, the app automatically uses the device voice for that answer instead of playing an old recording. A full run of all four voices takes about 15–20 minutes on a laptop. (`.ttsenv/` and `.kokoro/` are git-ignored.)
+
+## Feedback
+
+People can send feedback from **Settings › Send feedback** or with **Report a problem with this question** under any answer. Messages go to a free Cloudflare Worker (`api.n400practice.com`) and are stored in a Cloudflare D1 (SQLite) database. Only what the person writes (and their email, if they choose to give one) is stored: no IP address or tracking. Feedback written offline is saved on the device and sent automatically when it's back online.
+
+**To read feedback:** Cloudflare dashboard → Storage & Databases → D1 → **n400-feedback** → Console. See [worker/README.md](worker/README.md) for queries and a CSV export.
 
 ## Keeping time-sensitive answers current
 
