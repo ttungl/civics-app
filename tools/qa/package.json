@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "scripts": { "qa": "node browser-qa.js", "live": "node live-check.js" },
+  "devDependencies": { "puppeteer-core": "^23", "axe-core": "^4" }
+}
