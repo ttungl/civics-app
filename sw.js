@@ -1,7 +1,7 @@
 /* Civics service worker.
  * To publish an update: change VERSION below (e.g. 1.0.1), then upload.
  * Browsers see the changed file, install the new version, and remove the old cache. */
-const VERSION = '1.3.0';
+const VERSION = '1.3.1';
 const CACHE = 'civics-' + VERSION;
 // Recorded voices live in their own cache so app updates don't delete them.
 // Change AUDIO_CACHE only after re-recording clips (tools/tts/generate_audio.py).
