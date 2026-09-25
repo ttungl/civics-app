@@ -11,7 +11,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   ok('HTTPS 200', res.status() === 200 && p.url().startsWith('https://'), p.url());
   await p.evaluate(() => navigator.serviceWorker.ready); await sleep(1500);
   const sw = await p.evaluate(async () => { const r = await navigator.serviceWorker.getRegistration(); return { active: !!(r && r.active), scope: r && r.scope, caches: await caches.keys(), n: (await (await caches.open((await caches.keys())[0])).keys()).length }; });
-  ok('Service worker active, scoped to /civics-app/', sw.active && sw.scope === URL, JSON.stringify(sw));
+  ok('Service worker active, scoped to the site root', sw.active && sw.scope === URL, JSON.stringify(sw));
   const cdp = await p.target().createCDPSession();
   const man = await cdp.send('Page.getAppManifest');
   ok('Manifest parsed without errors', man.url.endsWith('manifest.webmanifest') && man.errors.length === 0, JSON.stringify(man.errors));
