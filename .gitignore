@@ -1,1 +1,6 @@
 .DS_Store
+.claude/
+node_modules/
+tools/qa/shot-*.png
+tools/qa/qa-results.json
+tools/qa/live-profile/
