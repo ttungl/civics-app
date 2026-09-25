@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>Page not found · Civics</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#f2f2f7;--card:#fff;--label:#1d1d1f;--label-2:#5e5e63;--accent:#0058b0;--on:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--card:#1c1c1e;--label:#f5f5f7;--label-2:#aeaeb2;--accent:#66b2ff;--on:#000}}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;color:var(--label);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;box-sizing:border-box}
+main{background:var(--card);border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.ico{font-size:3rem;line-height:1}
+h1{font-size:1.5rem;margin:12px 0 8px}
+p{color:var(--label-2);margin:0 0 24px;line-height:1.45}
+a{display:flex;align-items:center;justify-content:center;min-height:50px;border-radius:14px;background:var(--accent);color:var(--on);font-weight:600;text-decoration:none;font-size:1.0625rem}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+  <div class="ico" aria-hidden="true">🧭</div>
+  <h1>Page not found</h1>
+  <p>This page doesn’t exist, but your flashcards are right where you left them.</p>
+  <a id="home" href="./">Go to Civics</a>
+</main>
+<script>
+  // On GitHub Pages this page can be shown for any missing path, so link to the app's folder.
+  (function () {
+    var m = location.pathname.match(/^\/civics-app\//);
+    if (location.protocol !== 'file:') document.getElementById('home').href = m ? '/civics-app/' : '/';
+  })();
+</script>
+</body>
+</html>
