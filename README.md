@@ -34,23 +34,26 @@ After your first visit the app works **offline**, including in airplane mode.
 
 Turn on **Settings › Read questions aloud**, then pick a voice under **Settings › Voice**:
 
-| Voice | Microsoft Azure neural voice |
-|---|---|
-| Ava (default) | `en-US-AvaNeural` |
-| Andrew | `en-US-AndrewNeural` |
-| Emma | `en-US-EmmaNeural` |
-| Christopher | `en-US-ChristopherNeural` |
-| Device voice | the phone or computer's built-in voice |
+| Voice | Kokoro voice | Sound |
+|---|---|---|
+| Heart (default) | `af_heart` | female, warm and natural |
+| Bella | `af_bella` | female, bright and friendly |
+| Michael | `am_michael` | male, clear and steady |
+| Fenrir | `am_fenrir` | male, deep and confident |
+| Device voice | the phone or computer's built-in voice | |
 
-The four Azure voices are **recorded ahead of time** into `audio/<voice>/` and served with the app, so there's no API key in the app, nothing is sent to Microsoft while studying, and clips work offline once played or downloaded (Settings › *Download this voice for offline use*, about 5 MB). Answers people type in themselves (their senators, governor, and so on) are read by the device voice.
+The voices come from **[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)**, a free, open-source speech model (Apache-2.0 license). No account or API key is needed. Every question and answer is **recorded ahead of time** into `audio/<voice>/` and served with the app, so nothing is sent anywhere while studying, and clips work offline once played or downloaded (Settings › *Download this voice for offline use*, about 5 MB). Answers people type in themselves (their senators, governor, and so on) are read by the device voice.
 
-**Recording the audio** (needs an Azure Speech key; the Free F0 tier is enough, since all four voices use about 39,000 of its 500,000 free characters per month):
+**Re-recording the audio** (for example after changing an answer), on a Mac or Linux computer:
 
 ```
-AZURE_SPEECH_KEY=<key> AZURE_SPEECH_REGION=<region, e.g. eastus> python3 tools/tts/generate_audio.py
+python3 -m venv .ttsenv && .ttsenv/bin/pip install kokoro-onnx soundfile   # once
+mkdir -p .kokoro && cd .kokoro && curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx \
+  && curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin && cd ..   # once, ~350 MB
+.ttsenv/bin/python tools/tts/generate_audio.py
 ```
 
-It records only missing clips and deletes out-of-date ones. Each file name contains a hash of its text, so if an answer is edited and not re-recorded, the app automatically uses the device voice for that answer instead of playing an old recording. On the free tier (about 20 requests a minute) a full first run takes about 50 minutes; the script waits and retries on its own.
+It needs `ffmpeg` (`brew install ffmpeg`). It records only missing clips and deletes out-of-date ones. Each file name contains a hash of its text, so if an answer is edited and not re-recorded, the app automatically uses the device voice for that answer instead of playing an old recording. A full run of all four voices takes about 15–20 minutes on a laptop. (`.ttsenv/` and `.kokoro/` are git-ignored.)
 
 ## Keeping time-sensitive answers current
 
@@ -81,7 +84,7 @@ logo-mark.webp, logo-wordmark.webp   logo pieces for the Home brand row
 apple-touch-icon.png   iPhone home-screen icon (180×180)
 icon-192.png, icon-512.png, icon-maskable-512.png   Android/desktop install icons
 og-image.png           link preview image (1200×630)
-audio/<voice>/         pre-recorded Azure neural voice clips (q###-hash.mp3, a###-hash.mp3, sample.mp3)
+audio/<voice>/         pre-recorded Kokoro voice clips (q###-hash.mp3, a###-hash.mp3, sample.mp3)
 404.html               "page not found" page
 docs/                  design spec, dataset report, QA report, update guide
 tools/                 source PDF text, parser, dataset builder, content verifier, logo source and link-preview template

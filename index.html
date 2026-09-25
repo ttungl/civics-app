@@ -697,7 +697,7 @@ html.calm .confetti{display:none}
 
   <h2 class="group-h" id="g-voice">Voice</h2>
   <div class="list" role="radiogroup" aria-labelledby="g-voice" id="voice-list"></div>
-  <p class="footnote group-f">Ava, Andrew, Emma, and Christopher are Microsoft Azure neural voices, recorded ahead of time, so nothing you study is sent anywhere. Answers you type yourself (like your senators) are read by your device’s voice.</p>
+  <p class="footnote group-f">Heart, Bella, Michael, and Fenrir are natural-sounding voices from Kokoro, a free open-source speech model. They’re recorded ahead of time, so nothing you study is sent anywhere. Answers you type yourself (like your senators) are read by your device’s voice.</p>
   <div class="list" style="margin-top:12px" id="voice-dl-wrap">
     <button class="row row-btn" type="button" id="btn-voice-dl"><span id="voice-dl-label">Download this voice for offline use</span><span class="dl-status" id="voice-dl-status"></span></button>
   </div>
@@ -917,7 +917,7 @@ const QUESTIONS = [
   // ---------- Storage (fails safely) ----------
   const KEY = 'civics:v1';
   let storageOK = true;
-  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true, voice: 'ava' }, officials: {}, deck: 'all', cur: null, test: null });
+  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true, voice: 'heart' }, officials: {}, deck: 'all', cur: null, test: null });
   function readStore() {
     try {
       localStorage.setItem('civics:t', '1'); localStorage.removeItem('civics:t');
@@ -999,16 +999,16 @@ const QUESTIONS = [
     } catch (e) { /* speech unavailable */ }
   }
 
-  // Microsoft Azure neural voices, pre-recorded to audio/<voice>/ by tools/tts/generate_audio.py.
+  // Kokoro voices (open-source, Apache-2.0), pre-recorded to audio/<voice>/ by tools/tts/generate_audio.py.
   const VOICES = [
-    { id: 'ava', name: 'Ava', desc: 'Female · friendly and warm', color: '#db2777' },
-    { id: 'andrew', name: 'Andrew', desc: 'Male · warm and confident', color: '#2563eb' },
-    { id: 'emma', name: 'Emma', desc: 'Female · clear and cheerful', color: '#7c3aed' },
-    { id: 'christopher', name: 'Christopher', desc: 'Male · calm and steady', color: '#0f766e' },
+    { id: 'heart', name: 'Heart', desc: 'Female · warm and natural', color: '#db2777' },
+    { id: 'bella', name: 'Bella', desc: 'Female · bright and friendly', color: '#7c3aed' },
+    { id: 'michael', name: 'Michael', desc: 'Male · clear and steady', color: '#2563eb' },
+    { id: 'fenrir', name: 'Fenrir', desc: 'Male · deep and confident', color: '#0f766e' },
     { id: 'device', name: 'Device voice', desc: 'Built into this phone or computer', color: '#6b7280' },
   ];
   const AZURE_IDS = VOICES.filter((v) => v.id !== 'device').map((v) => v.id);
-  const curVoice = () => (VOICES.some((v) => v.id === S.settings.voice) ? S.settings.voice : 'ava');
+  const curVoice = () => (VOICES.some((v) => v.id === S.settings.voice) ? S.settings.voice : 'heart');
   // Same text rules as tools/tts/generate_audio.py.
   const speechText = (t) => String(t).replace(/\s*\(\d+\)/g, '').replace(/[()[\]]/g, '').replace(/\s+/g, ' ').trim();
   const pad3 = (n) => String(n).padStart(3, '0');
