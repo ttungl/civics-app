@@ -1,6 +1,7 @@
 # QA & Post-Launch Sign-off
 
-**Live URL:** https://ttungl.github.io/civics-app/  ·  **Release:** 1.0.3  ·  **Date:** September 24, 2026
+**Live URL:** https://n400practice.com/  ·  **Release:** 1.0.4  ·  **Date:** September 24, 2026  
+*(Originally launched at ttungl.github.io/civics-app/, which now redirects to the custom domain.)*
 **Verdict:** ✅ **Ship.** There are 0 open critical or major issues. The items in §6 are manual device checks that automation can't do, and they're listed so the owner can tick them off.
 
 ---
@@ -40,17 +41,17 @@ Re-run any time with `python3 tools/verify_content.py`. Details are in [DATASET-
 |---|---|
 | HTTPS, 200; http:// → 301 → https | ✅ |
 | All assets served with correct MIME types; unknown paths → 404 page | ✅ |
-| Service worker active, scope `/civics-app/`, 8 files precached | ✅ |
+| Service worker active, scoped to the site root, 8 files precached | ✅ |
 | Manifest parsed without errors; **Chrome installability errors: none** | ✅ |
 | **Airplane mode:** reload works, a cold open in a new tab works, icons come from the cache, progress is kept | ✅ |
 | OG and Twitter tags: title, description, absolute 1200×630 `og:image` (reachable, image/png) | ✅ |
 | No console errors on the live site | ✅ |
 | **Update rollout:** a returning visitor with v1.0.2 cached saw **v1.0.3 on their first visit** after the deploy. The old cache was deleted, the new version works offline, and progress was kept | ✅ |
 
-### Lighthouse 12.8.2 (live URL)
+### Lighthouse 12.8.2 (live URL, https://n400practice.com)
 | | Performance | Accessibility | Best Practices | SEO | FCP | LCP | CLS | TBT |
 |---|---|---|---|---|---|---|---|---|
-| Mobile | **100** | **100** | **100** | **100** | 1.0 s | 1.0 s | 0 | 0 ms |
+| Mobile | **100** | **100** | **100** | **100** | 1.0 s | 1.1 s | 0 | 10 ms |
 | Desktop | **100** | **100** | **100** | **100** | 0.3 s | 0.3 s | 0 | 0 ms |
 
 Full reports: [lighthouse/mobile.html](lighthouse/mobile.html) and [lighthouse/desktop.html](lighthouse/desktop.html). Lighthouse 12 no longer has a "PWA" category, so installability was verified directly through Chrome's installability check (§4). The remaining advisory items are GitHub Pages' fixed 10-minute cache headers (the host controls these) and optional image-format hints.
@@ -87,9 +88,23 @@ node live-check.js          # 11 checks against the live URL
 python3 ../verify_content.py
 ```
 
-## Optional: custom domain (free hosting, domain costs ~$10–15/yr)
-1. Buy a domain (e.g. from Cloudflare, Porkbun, or Namecheap).
-2. In the repo, go to **Settings › Pages › Custom domain**, type e.g. `civics.example.com`, and click Save (GitHub adds a `CNAME` file).
-3. At your domain registrar, add a DNS record: `CNAME civics → ttungl.github.io` (for a root domain, use the four GitHub `A` records listed in GitHub's docs).
-4. Once it verifies, tick **Enforce HTTPS**.
-5. In `index.html`, change the `canonical`, `og:url`, `og:image`, and `twitter:image` URLs to the new domain, then bump `sw.js`.
+## Custom domain: n400practice.com ✅
+The site is hosted on GitHub Pages, with DNS at Cloudflare (the domain is registered there too).
+
+| Cloudflare DNS record | Value | Proxy |
+|---|---|---|
+| A `@` ×4 | `185.199.108.153`, `.109.153`, `.110.153`, `.111.153` | DNS only |
+| AAAA `@` ×4 | `2606:50c0:8000::153` … `8003::153` | DNS only |
+| CNAME `www` | `ttungl.github.io` | DNS only |
+
+Keep these records **DNS only (grey cloud)**. When proxied, GitHub can't renew its HTTPS certificate, and Cloudflare's cache can delay app updates.
+
+| Post-switch check | Result |
+|---|---|
+| GitHub Pages custom domain `n400practice.com`, certificate **approved** (covers the root and www) | ✅ |
+| Enforce HTTPS on; `http://n400practice.com` → 301 → `https://n400practice.com/` | ✅ |
+| `https://www.n400practice.com` → 301 → `https://n400practice.com/` | ✅ |
+| Old `https://ttungl.github.io/civics-app/` → 301 → `https://n400practice.com/` | ✅ |
+| Live checks (11/11) and Lighthouse 100 ×4 on the new domain | ✅ |
+
+Note: progress is stored per web address, so anyone who studied on the github.io address before the switch starts fresh on n400practice.com.
