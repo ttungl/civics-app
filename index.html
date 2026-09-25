@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Civics — U.S. Citizenship Test Flashcards (2025)</title>
+<title>n400practice.com — Free N-400 Civics Test Practice (2025)</title>
 <meta name="description" content="Free, private flashcards and practice tests for all 128 questions of the 2025 USCIS civics test. Works offline, no sign-up.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
@@ -11,23 +11,23 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Civics">
-<meta name="application-name" content="Civics">
+<meta name="apple-mobile-web-app-title" content="N-400 Practice">
+<meta name="application-name" content="N-400 Practice">
 <meta name="format-detection" content="telephone=no">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="canonical" href="https://n400practice.com/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Civics">
-<meta property="og:title" content="Civics — U.S. Citizenship Test Flashcards (2025)">
+<meta property="og:site_name" content="n400practice.com">
+<meta property="og:title" content="n400practice.com — Free N-400 Civics Test Practice (2025)">
 <meta property="og:description" content="Free, private flashcards and practice tests for all 128 questions of the 2025 USCIS civics test. Works offline, no sign-up.">
 <meta property="og:url" content="https://n400practice.com/">
 <meta property="og:image" content="https://n400practice.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Civics: study all 128 USCIS citizenship test questions. Free, no sign-up, works offline.">
+<meta property="og:image:alt" content="n400practice.com logo. Pass your citizenship test: all 128 official USCIS civics questions. Free, no sign-up, works offline.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Civics — U.S. Citizenship Test Flashcards (2025)">
+<meta name="twitter:title" content="n400practice.com — Free N-400 Civics Test Practice (2025)">
 <meta name="twitter:description" content="Free, private flashcards and practice tests for all 128 questions of the 2025 USCIS civics test.">
 <meta name="twitter:image" content="https://n400practice.com/og-image.png">
 <style>
@@ -93,7 +93,6 @@ main{display:block;max-width:760px;margin:0 auto;padding:0 calc(var(--gutter) + 
 @media (min-width:600px){:root{--gutter:24px}}
 @media (min-width:900px){
   .tabs{top:0;right:auto;width:240px;flex-direction:column;justify-content:flex-start;gap:2px;padding:calc(var(--sat) + 20px) 12px 20px calc(12px + var(--sal));border-top:0;border-right:.5px solid var(--sep)}
-  .tabs::before{content:"Civics";font-weight:700;font-size:1.375rem;padding:0 12px 14px}
   .tab{flex:none;max-width:none;flex-direction:row;justify-content:flex-start;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;font-size:1rem;color:var(--label)}
   .tab svg.i{width:22px;height:22px;color:var(--accent)}
   .tab:hover{background:var(--fill)}
@@ -319,6 +318,25 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 @media (min-width:900px){.toast{left:calc(50% + 120px);bottom:32px}}
 
 
+
+/* ---------- Logo (v1.2) ---------- */
+/* The logo is navy/red on transparent, so it always sits on a white tile (readable in dark mode too). */
+.brand{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border-radius:14px;background:#fff;box-shadow:var(--shadow-1);border:1px solid var(--card-border);text-decoration:none}
+.brand-mark{height:40px;width:auto;display:block}
+.brand-word{height:19px;width:auto;display:block}
+.hero .brand.w{display:flex;width:fit-content}
+.hero .greet.w{display:block;margin-top:14px}
+.side-brand{display:none}
+@media (min-width:900px){
+  .hero .brand.w{display:none}
+  .hero .greet.w{margin-top:0}
+  .side-brand{display:block;margin:0 0 16px;padding:12px;border-radius:14px;background:#fff;border:1px solid var(--card-border)}
+  .side-brand img{display:block;width:100%;height:auto}
+  .side-brand:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+}
+.about-logo{display:block;width:fit-content;max-width:100%;margin:4px auto 0;padding:14px 18px;border-radius:20px;background:#fff;box-shadow:var(--shadow-1);border:1px solid var(--card-border)}
+.about-logo img{display:block;width:min(320px,70vw);height:auto}
+
 /* ---------- Color & motion (v1.1) ---------- */
 :root{--g1:#2563eb;--g2:#7c3aed;--g3:#db2777;--g4:#c2410c;
   --grad-text:linear-gradient(90deg,var(--g1),var(--g2),var(--g3),var(--g4),var(--g1));
@@ -445,11 +463,12 @@ html.calm .confetti{display:none}
 <header class="topbar" id="topbar">
   <div class="topbar-in">
     <a class="back" id="back" href="#settings" hidden><svg class="i" aria-hidden="true"><use href="#i-chev-l"/></svg>Settings</a>
-    <span class="topbar-title" id="topbar-title" aria-hidden="true">Civics</span>
+    <span class="topbar-title" id="topbar-title" aria-hidden="true">n400practice.com</span>
   </div>
 </header>
 
 <nav class="tabs" aria-label="Main">
+  <a class="side-brand" href="#home" aria-label="n400practice.com, home"><img src="logo.webp" alt="" width="216" height="134"></a>
   <a class="tab" href="#home" data-tab="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
   <a class="tab" href="#study" data-tab="study"><svg class="i" aria-hidden="true"><use href="#i-cards"/></svg><span>Study</span></a>
   <a class="tab" href="#test" data-tab="test"><svg class="i" aria-hidden="true"><use href="#i-test"/></svg><span>Test</span></a>
@@ -458,12 +477,13 @@ html.calm .confetti{display:none}
 </nav>
 
 <main id="main" tabindex="-1">
-<noscript><p class="card" style="padding:20px;margin-top:16px">Civics needs JavaScript turned on to show flashcards.</p></noscript>
+<noscript><p class="card" style="padding:20px;margin-top:16px">n400practice.com needs JavaScript turned on to show flashcards.</p></noscript>
 
 <!-- HOME -->
-<section class="screen" id="screen-home" data-title="Civics" aria-labelledby="h-home" hidden>
+<section class="screen" id="screen-home" data-title="n400practice.com" aria-labelledby="h-home" hidden>
   <div class="hero">
     <div class="orbs" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span></div>
+    <a class="brand w" href="#about" aria-label="About n400practice.com"><img class="brand-mark" src="logo-mark.webp" alt="" width="59" height="40"><img class="brand-word" src="logo-wordmark.webp" alt="" width="161" height="19"></a>
     <p class="greet w" id="greet">Welcome</p>
     <h1 class="hero-title" id="h-home" tabindex="-1"><span class="w" style="--i:1">Pass</span> <span class="w" style="--i:2">your</span> <span class="w nw" style="--i:3"><span class="grad-text">citizenship test</span></span> <span class="w" style="--i:4">with</span> <span class="w" style="--i:5">confidence.</span></h1>
     <p class="subtitle w" style="--i:7">All 128 official USCIS questions. Free, private, and works offline.</p>
@@ -667,16 +687,15 @@ html.calm .confetti{display:none}
   <p class="footnote group-f">Everything stays on this device. Nothing is sent anywhere.</p>
 
   <div class="list" style="margin-top:28px">
-    <a class="row row-btn" href="#about"><span>About Civics</span><svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+    <a class="row row-btn" href="#about"><span>About n400practice.com</span><svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
   </div>
 </section>
 
 <!-- ABOUT -->
 <section class="screen" id="screen-about" data-title="About" aria-labelledby="h-about" hidden>
   <div class="about-hero">
-    <img src="apple-touch-icon.png" alt="" width="72" height="72">
-    <h1 class="large-title" id="h-about" tabindex="-1">Civics</h1>
-    <p class="footnote">Version <span id="app-version"></span></p>
+    <h1 class="about-logo" id="h-about" tabindex="-1"><img src="logo.webp" alt="n400practice.com: Practice N-400 Interview Questions and Answers" width="320" height="199"></h1>
+    <p class="footnote" style="margin-top:10px">Version <span id="app-version"></span></p>
   </div>
   <div class="disclaimer sr">Free study tool. Not affiliated with or endorsed by USCIS or the U.S. government.</div>
   <h2 class="group-h">Source</h2>
@@ -722,7 +741,7 @@ html.calm .confetti{display:none}
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
@@ -1059,7 +1078,7 @@ const QUESTIONS = [
     const sec = $('#screen-' + name);
     $('#topbar-title').textContent = sec.dataset.title;
     $('#back').hidden = name !== 'about';
-    document.title = name === 'home' ? 'Civics — U.S. Citizenship Test Flashcards (2025)' : `${sec.dataset.title} · Civics`;
+    document.title = name === 'home' ? 'n400practice.com — Free N-400 Civics Test Practice (2025)' : `${sec.dataset.title} · n400practice.com`;
     RENDER[name]();
     revealOnScroll();
     if (changed) window.scrollTo(0, 0);

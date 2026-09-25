@@ -1,13 +1,16 @@
 /* Civics service worker.
  * To publish an update: change VERSION below (e.g. 1.0.1), then upload.
  * Browsers see the changed file, install the new version, and remove the old cache. */
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const CACHE = 'civics-' + VERSION;
 const ASSETS = [
   './',
   'index.html',
   'manifest.webmanifest',
-  'favicon.svg',
+  'favicon.png',
+  'logo.webp',
+  'logo-mark.webp',
+  'logo-wordmark.webp',
   'apple-touch-icon.png',
   'icon-192.png',
   'icon-512.png',

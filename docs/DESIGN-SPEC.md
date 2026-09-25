@@ -191,3 +191,16 @@ Inspired by the soft-gradient, animated style of modern AI product sites (e.g. E
 | Scroll reveals | Cards and notices below the fold fade up as they enter the view |
 
 **Motion controls (WCAG 2.2.2 / 2.3.3):** a *Settings › Motion effects* switch (on by default) stops every decorative animation: orbs, shimmer, word reveal, sweep, card spin, and confetti. The same "calm" mode turns on automatically when the device has Reduce Motion enabled, and it updates live if that setting changes. Gradient text falls back to solid text where `background-clip: text` isn't supported and in Windows High Contrast (forced colors).
+
+## 14. Logo & brand (v1.2)
+The app now uses the **n400practice.com** logo (supplied by the owner; the source is kept in `tools/art/logo-source.png`). The display name is **n400practice.com**, and the installed app name is **N-400 Practice**.
+
+| Where | Treatment |
+|---|---|
+| Home (phone and tablet) | A brand row above the greeting: the emblem (40 px) and the wordmark (19 px) on a white rounded tile. It links to About. |
+| Sidebar (≥ 900 px) | The full logo on a white tile at the top of the sidebar. It links to Home. The Home brand row is hidden at this width. |
+| About | The full logo, with tagline, on a white tile; this is the page's `h1`, and the image alt text carries the name. |
+| App icons | The emblem centered on white: 180 (apple-touch), 192, 512, a maskable 512 (with a 20% safe zone), and a 64 px favicon. |
+| Link preview | White card with soft color orbs, the full logo on the left, "Pass your citizenship test" on the right, and the "Free · No sign-up · Works offline" pill. The template is `tools/art/og.html`. |
+
+The logo is navy and red, so it **always sits on white**. That keeps it readable in dark mode, and matches how app icons appear. All logo assets are flattened onto white (no transparency), because the generated source had a faint semi-transparent haze around the art.

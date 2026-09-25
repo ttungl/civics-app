@@ -1,4 +1,4 @@
-# Civics: U.S. Citizenship Test Flashcards (2025)
+# n400practice.com: N-400 Civics Test Practice (2025)
 
 A free, private web app for studying all **128 questions of the official USCIS 2025 Civics Test**. It has flashcards with spaced repetition, a practice test that works like the real interview, and a searchable review list, and it works offline.
 
@@ -53,13 +53,15 @@ If you host at a different address, update the `og:url`, `og:image`, `twitter:im
 index.html             the whole app (HTML + CSS + JS + the 128-question dataset)
 manifest.webmanifest   app name, colors, and icons for "install"
 sw.js                  service worker (offline cache; bump VERSION to publish updates)
-favicon.svg            browser tab icon
+favicon.png            browser tab icon
+logo.webp, logo.png    full logo (About screen, sidebar, link preview)
+logo-mark.webp, logo-wordmark.webp   logo pieces for the Home brand row
 apple-touch-icon.png   iPhone home-screen icon (180×180)
 icon-192.png, icon-512.png, icon-maskable-512.png   Android/desktop install icons
 og-image.png           link preview image (1200×630)
 404.html               "page not found" page
 docs/                  design spec, dataset report, QA report, update guide
-tools/                 source PDF text, parser, dataset builder, content verifier, icon artwork
+tools/                 source PDF text, parser, dataset builder, content verifier, logo source and link-preview template
 ```
 
 ## For developers
