@@ -1,7 +1,7 @@
 /* Civics service worker.
  * To publish an update: change VERSION below (e.g. 1.0.1), then upload.
  * Browsers see the changed file, install the new version, and remove the old cache. */
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const CACHE = 'civics-' + VERSION;
 const ASSETS = [
   './',
@@ -43,7 +43,8 @@ self.addEventListener('fetch', (event) => {
   // Pages: try the network first (fresh content), fall back to the cached copy offline.
   if (req.mode === 'navigate') {
     event.respondWith(
-      Promise.race([fetch(req), timeout(4000)])
+      // no-cache: always ask the server (a quick 304 if unchanged), so updates show on the next visit.
+      Promise.race([fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }), timeout(4000)])
         .then((res) => {
           if (res && res.ok) {
             const copy = res.clone();
