@@ -7,3 +7,6 @@ tools/qa/live-profile/
 __pycache__/
 .ttsenv/
 .kokoro/
+worker/.wrangler/
+worker/node_modules/
+worker/feedback.csv

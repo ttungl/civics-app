@@ -213,3 +213,10 @@ On the Home brand row and in app icons, the logo is navy and red on a **white ti
 * **Offline:** clips are cached in a separate `n400-audio-*` cache that survives app updates.
 * **Accuracy:** clip file names include a hash of their text. An answer edited without re-recording falls back to the device voice, so a recording can never read an old answer.
 * **Privacy & cost:** no API key, no account, and no speech service at runtime; the audio is ordinary files on the same site, free to host.
+
+## 16. Feedback (v1.4)
+* **Entry points:** Settings › *Feedback › Send feedback*, About › *Send feedback*, and a *Report a problem with this question* link (warning icon) under every answer (flashcard back, Review, test results), which pre-fills the question number.
+* **Form** (native `<dialog>`, 440 px max): Type (Suggestion / Problem with a question / Something isn't working / Other), question number (only for question reports), message (required, 3–2,000 characters, with a live counter), optional email, a privacy line, and Send / Cancel. Errors appear inline (`role=alert`); success closes the form with a "Thank you!" toast.
+* **Offline:** unsent feedback is saved on the device (`outbox`, up to 20) and sent automatically on the `online` event or at the next app start.
+* **Backend:** Cloudflare Worker + D1 (see `worker/`). CORS allows only n400practice.com (and the local-file version); there's a honeypot and a rate limit of about 5 per minute; no IP or device data is stored.
+* **Privacy wording** updated in Settings, About, and the README: everything stays on the device except feedback the user chooses to send.
