@@ -50,6 +50,9 @@ The whole app lives in one file, **`index.html`**. To change an answer you:
 
 ---
 
+### About the recorded voices
+After you change an answer, the Ava, Andrew, Emma, and Christopher voices **automatically switch to the device's own voice for that answer**, so nobody hears the old name. To get the recorded voice back for it, ask a developer to run `python3 tools/tts/generate_audio.py` (it re-records only what changed, in a few seconds).
+
 ## Other common edits
 
 **Fix wording in a "Remember it" tip:** search for a few words of the tip and edit the text inside the quotes after `"explanation":`.

@@ -6,6 +6,11 @@ const axeSrc = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 const results = []; const ok = (name, cond, info='') => { results.push([cond ? 'PASS' : 'FAIL', name, info]); };
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+// Wait for finite entrance animations (fade-ins) to finish so axe measures final colors.
+const settle = (page) => page.evaluate(() => Promise.all(document.getAnimations()
+  .filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity)
+  .map((a) => a.finished.catch(() => {}))));
+
 async function newPage(browser, opts = {}) {
   const page = await browser.newPage();
   const rawClick = page.click.bind(page);
@@ -179,14 +184,14 @@ async function newPage(browser, opts = {}) {
       if (overflow > 0) ok(`No horizontal scroll ${s} @${w}${dark ? ' dark' : ''}`, false, overflow + 'px');
       if ((w === 390 || w === 1440) ) { const f = `shot-${s}-${w}${dark ? '-dark' : ''}.png`; await page.screenshot({ path: f }); shots.push(f); }
       if (w === 390) {
-        await page.addScriptTag({ content: axeSrc });
+        await settle(page); await page.addScriptTag({ content: axeSrc });
         const r = await page.evaluate(async () => { const r = await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'best-practice'] }); return r.violations.map(v => `${v.id}(${v.impact}):${v.nodes.length} ${v.nodes.slice(0,2).map(n=>n.target.join(' ')).join(',')}`); });
         ok(`axe ${s}${dark ? ' dark' : ''}`, r.length === 0, r.join(' | '));
       }
     }
     if (w === 390 && !dark) { // flipped card shot + 200% zoom (320 css px at 640 viewport == 200%)
       await page.goto(URL + '#study'); await sleep(300); await page.click('#fc-q'); await sleep(600); await page.screenshot({ path: 'shot-study-back-390.png' }); shots.push('shot-study-back-390.png');
-      await page.addScriptTag({ content: axeSrc });
+      await settle(page); await page.addScriptTag({ content: axeSrc });
       const r = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a','wcag2aa','best-practice'] })).violations.map(v => v.id + ':' + v.nodes.map(n=>n.target.join(' ')).slice(0,3).join(',')));
       ok('axe study (flipped)', r.length === 0, r.join(' | '));
     }

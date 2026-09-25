@@ -318,6 +318,21 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 
 
 
+/* ---------- Voices (v1.3) ---------- */
+.voice-row{display:flex;align-items:center;gap:8px;min-height:56px;padding:4px 8px 4px 16px;position:relative}
+.voice-row+.voice-row::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
+.voice-row input{position:absolute;opacity:0;pointer-events:none}
+.voice-row label{flex:1;display:flex;align-items:center;gap:12px;min-height:48px;cursor:pointer}
+.voice-av{width:36px;height:36px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9375rem}
+.voice-name{display:block;font-weight:500}
+.voice-desc{display:block;font-size:.8125rem;color:var(--label-2)}
+.voice-check{margin-left:auto;color:var(--accent);opacity:0}
+.voice-row input:checked+label .voice-check{opacity:1}
+.voice-row input:focus-visible+label{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.voice-row .icon-btn{width:40px;height:40px}
+.voice-row .icon-btn.playing{background:var(--accent);color:var(--on-accent)}
+.dl-status{margin-left:auto;font-size:.875rem;color:var(--label-2);font-variant-numeric:tabular-nums}
+
 /* ---------- Logo (v1.2) ---------- */
 /* The logo is navy/red on transparent, so it always sits on a white tile (readable in dark mode too). */
 .brand{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border-radius:14px;background:#fff;box-shadow:var(--shadow-1);border:1px solid var(--card-border);text-decoration:none}
@@ -680,6 +695,13 @@ html.calm .confetti{display:none}
   <p class="footnote group-f" id="s-motion-d">Motion effects: moving colors, animated text, and confetti. Turn this off for a calmer screen. It also switches off automatically when your device’s Reduce Motion setting is on.</p>
   <p class="footnote group-f" id="speech-note" hidden>Read aloud isn’t available in this browser.</p>
 
+  <h2 class="group-h" id="g-voice">Voice</h2>
+  <div class="list" role="radiogroup" aria-labelledby="g-voice" id="voice-list"></div>
+  <p class="footnote group-f">Ava, Andrew, Emma, and Christopher are Microsoft Azure neural voices, recorded ahead of time, so nothing you study is sent anywhere. Answers you type yourself (like your senators) are read by your device’s voice.</p>
+  <div class="list" style="margin-top:12px" id="voice-dl-wrap">
+    <button class="row row-btn" type="button" id="btn-voice-dl"><span id="voice-dl-label">Download this voice for offline use</span><span class="dl-status" id="voice-dl-status"></span></button>
+  </div>
+
   <h2 class="group-h" id="g-data">Data</h2>
   <div class="list" role="group" aria-labelledby="g-data">
     <button class="row row-btn danger" type="button" id="btn-reset">Reset progress</button>
@@ -741,7 +763,7 @@ html.calm .confetti{display:none}
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.2.1';
+const APP_VERSION = '1.3.0';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
@@ -895,7 +917,7 @@ const QUESTIONS = [
   // ---------- Storage (fails safely) ----------
   const KEY = 'civics:v1';
   let storageOK = true;
-  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true }, officials: {}, deck: 'all', cur: null, test: null });
+  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true, voice: 'ava' }, officials: {}, deck: 'all', cur: null, test: null });
   function readStore() {
     try {
       localStorage.setItem('civics:t', '1'); localStorage.removeItem('civics:t');
@@ -965,18 +987,108 @@ const QUESTIONS = [
     voice = us.find((v) => /samantha|ava|allison|google us english|aria|jenny|zira/i.test(v.name)) || us.find((v) => v.localService) || us[0] || vs.find((v) => /^en/i.test(v.lang)) || null;
   }
   if (synth) { pickVoice(); if ('onvoiceschanged' in synth) synth.addEventListener('voiceschanged', pickVoice); }
-  else document.documentElement.classList.add('no-speech');
+  
   function speak(text) {
     if (!synth) return;
     try {
       synth.cancel();
-      const u = new SpeechSynthesisUtterance(String(text).replace(/[()[\]]/g, '').replace(/U\.S\./g, 'U.S.'));
+      const u = new SpeechSynthesisUtterance(speechText(text));
       u.lang = 'en-US'; if (voice) u.voice = voice;
       u.rate = S.settings.rate === 'slow' ? 0.72 : 0.95;
       synth.speak(u);
     } catch (e) { /* speech unavailable */ }
   }
-  const stopSpeech = () => { if (synth) try { synth.cancel(); } catch (e) {} };
+
+  // Microsoft Azure neural voices, pre-recorded to audio/<voice>/ by tools/tts/generate_audio.py.
+  const VOICES = [
+    { id: 'ava', name: 'Ava', desc: 'Female · friendly and warm', color: '#db2777' },
+    { id: 'andrew', name: 'Andrew', desc: 'Male · warm and confident', color: '#2563eb' },
+    { id: 'emma', name: 'Emma', desc: 'Female · clear and cheerful', color: '#7c3aed' },
+    { id: 'christopher', name: 'Christopher', desc: 'Male · calm and steady', color: '#0f766e' },
+    { id: 'device', name: 'Device voice', desc: 'Built into this phone or computer', color: '#6b7280' },
+  ];
+  const AZURE_IDS = VOICES.filter((v) => v.id !== 'device').map((v) => v.id);
+  const curVoice = () => (VOICES.some((v) => v.id === S.settings.voice) ? S.settings.voice : 'ava');
+  // Same text rules as tools/tts/generate_audio.py.
+  const speechText = (t) => String(t).replace(/\s*\(\d+\)/g, '').replace(/[()[\]]/g, '').replace(/\s+/g, ' ').trim();
+  const pad3 = (n) => String(n).padStart(3, '0');
+  // FNV-1a hash of the spoken text, in the clip's file name. If an answer is edited but not
+  // re-recorded, its file name changes, no clip is found, and the device voice reads the new text.
+  function textHash(t) {
+    let h = 0x811c9dc5;
+    for (const byte of new TextEncoder().encode(t)) { h ^= byte; h = Math.imul(h, 0x01000193) >>> 0; }
+    return h.toString(16).padStart(8, '0');
+  }
+  const qClip = (q) => `q${pad3(q.id)}-${textHash(speechText(q.question))}`;
+  const aClip = (q) => `a${pad3(q.id)}-${textHash(speechText(defaultSpokenAnswer(q)))}`;
+  const clipUrl = (name, v = curVoice()) => (v === 'device' ? null : `audio/${v}/${name}.mp3`);
+
+  const player = new Audio();
+  player.preload = 'auto';
+  let playToken = 0, clipObjUrl = null, audioUnlocked = false;
+  // iPhone/iPad only allow audio that starts from a tap: play a silent clip on the first tap so later clips can play.
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    try {
+      player.muted = true;
+      player.src = 'data:audio/wav;base64,UklGRsQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YaAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+      const pr = player.play();
+      if (pr) pr.then(() => { player.pause(); player.muted = false; }).catch(() => { player.muted = false; });
+      else player.muted = false;
+    } catch (e) { player.muted = false; }
+  }
+  addEventListener('pointerdown', unlockAudio, { capture: true, once: true });
+  addEventListener('keydown', unlockAudio, { capture: true, once: true });
+
+  async function playClip(url) {
+    const t = ++playToken;
+    if (synth) try { synth.cancel(); } catch (e) {}
+    let src = url;
+    if (location.protocol !== 'file:') {
+      try {
+        const r = await fetch(url);
+        if (!r.ok) return false;
+        const blob = await r.blob();
+        if (t !== playToken) return true;
+        if (clipObjUrl) URL.revokeObjectURL(clipObjUrl);
+        src = clipObjUrl = URL.createObjectURL(blob);
+      } catch (e) { return false; }
+    }
+    if (t !== playToken) return true;
+    try {
+      player.muted = false;
+      player.src = src;
+      player.playbackRate = S.settings.rate === 'slow' ? 0.8 : 1;
+      await player.play();
+      return true;
+    } catch (e) { return false; }
+  }
+  // Play the recorded clip when there is one, otherwise use the device voice.
+  async function say(text, url) {
+    if (url && await playClip(url)) return;
+    speak(text);
+  }
+  function defaultSpokenAnswer(q) {
+    if (q.currentAnswers) return q.currentAnswers[0];
+    if (q.localKey) return 'Answers will vary.';
+    return q.answersNeeded ? q.answers.slice(0, q.answersNeeded).join(', ') : q.answers[0];
+  }
+  const sayQuestion = (q) => say(q.question, clipUrl(qClip(q)));
+  function sayAnswer(q) {
+    const text = spokenAnswer(q);
+    say(text, speechText(text) === speechText(defaultSpokenAnswer(q)) ? clipUrl(aClip(q)) : null);
+  }
+  function sayVoiceSample(v) {
+    const meta = VOICES.find((x) => x.id === v);
+    const text = v === 'device' ? 'This is your device voice. I’ll read your civics test questions out loud.' : `Hi, I’m ${meta.name}. I’ll read your civics test questions out loud.`;
+    return say(text, clipUrl('sample', v));
+  }
+  const stopSpeech = () => {
+    playToken++;
+    try { player.pause(); } catch (e) {}
+    if (synth) try { synth.cancel(); } catch (e) {}
+  };
 
   // ---------- Announcements & toast ----------
   function announce(msg) { const r = $('#sr'); r.textContent = ''; setTimeout(() => { r.textContent = msg; }, 30); }
@@ -1181,7 +1293,7 @@ const QUESTIONS = [
     fc.style.transition = ''; fc.querySelector('.fc-inner').style.transition = '';
     fitCard();
     updateCounter();
-    if (auto && S.settings.readAloud) speak(q.question);
+    if (auto && S.settings.readAloud) sayQuestion(q);
   }
   // Both faces share one box: size it to the taller side so long answers never overlap the buttons.
   function fitCard() {
@@ -1260,8 +1372,8 @@ const QUESTIONS = [
   })();
   $('#fc-show').addEventListener('click', () => setFlip(true));
   $('#fc-hide').addEventListener('click', () => { setFlip(false); $('#fc-show').focus({ preventScroll: true }); });
-  $('#fc-speak').addEventListener('click', () => speak(BY_ID.get(S.cur).question));
-  $('#fc-speak-b').addEventListener('click', () => speak(spokenAnswer(BY_ID.get(S.cur))));
+  $('#fc-speak').addEventListener('click', () => sayQuestion(BY_ID.get(S.cur)));
+  $('#fc-speak-b').addEventListener('click', () => sayAnswer(BY_ID.get(S.cur)));
   $('#btn-know').addEventListener('click', () => answerCard(true));
   $('#btn-learn').addEventListener('click', () => answerCard(false));
   $('#btn-study-all').addEventListener('click', () => { S.deck = 'all'; S.cur = null; renderStudy(); });
@@ -1291,7 +1403,7 @@ const QUESTIONS = [
         'Say each answer out loud, then check it and be honest.',
       ].map((x) => `<li>${x}</li>`).join('');
       $('#t-read').checked = !!S.settings.readAloud;
-      $('#t-read').disabled = !synth;
+      $('#t-read').disabled = false;
       return;
     }
     if (t.done) return renderResult();
@@ -1310,7 +1422,7 @@ const QUESTIONS = [
     S.test = { ids: shuffle(src.map((q) => q.id)).slice(0, n), i: 0, res: [], revealed: false, m: S.settings.m6520 ? 1 : 0, done: false };
     save(); renderTest();
     $('#t-q').focus({ preventScroll: true });
-    if (S.settings.readAloud) speak(BY_ID.get(S.test.ids[0]).question);
+    if (S.settings.readAloud) sayQuestion(BY_ID.get(S.test.ids[0]));
   }
   function reveal() {
     const t = S.test; if (!t || t.done || t.revealed) return;
@@ -1333,7 +1445,7 @@ const QUESTIONS = [
     t.i++; t.revealed = false; save(); renderTest();
     $('#t-q').focus({ preventScroll: true });
     announce(`${ok ? 'Correct' : 'Missed'}. Question ${t.i + 1}: ${BY_ID.get(t.ids[t.i]).question}`);
-    if (S.settings.readAloud) speak(BY_ID.get(t.ids[t.i]).question);
+    if (S.settings.readAloud) sayQuestion(BY_ID.get(t.ids[t.i]));
   }
   function renderResult() {
     const t = S.test, c = tally(t), r = rules(t);
@@ -1356,7 +1468,7 @@ const QUESTIONS = [
   $('#btn-reveal').addEventListener('click', reveal);
   $('#btn-right').addEventListener('click', () => testAnswer(true));
   $('#btn-wrong').addEventListener('click', () => testAnswer(false));
-  $('#t-speak').addEventListener('click', () => { const t = S.test; if (t) speak(BY_ID.get(t.ids[t.i]).question); });
+  $('#t-speak').addEventListener('click', () => { const t = S.test; if (t) sayQuestion(BY_ID.get(t.ids[t.i])); });
   $('#t-read').addEventListener('change', (e) => { S.settings.readAloud = e.target.checked; save(); });
   $('#btn-quit').addEventListener('click', () => { S.test = null; stopSpeech(); save(); renderTest(); $('#h-test').focus(); });
   $('#btn-again').addEventListener('click', () => { S.test = null; save(); renderTest(); startTest(); });
@@ -1446,10 +1558,11 @@ const QUESTIONS = [
     $('#s-6520').checked = !!S.settings.m6520;
     $('#s-read').checked = !!S.settings.readAloud;
     $('#s-motion').checked = S.settings.motion !== false;
-    $('#s-read').disabled = !synth;
+    $('#s-read').disabled = false;
     $('#s-rate').value = S.settings.rate;
-    $('#s-rate').disabled = !synth;
-    $('#speech-note').hidden = !!synth;
+    $('#s-rate').disabled = false;
+    $('#speech-note').hidden = true;
+    renderVoices();
   }
   $$('[data-o]').forEach((i) => i.addEventListener('input', () => { S.officials[i.dataset.o] = i.value.trim(); save(); }));
   $('#s-6520').addEventListener('change', (e) => {
@@ -1457,8 +1570,68 @@ const QUESTIONS = [
     toast(e.target.checked ? '65/20 mode on · 20 questions' : '65/20 mode off · 128 questions');
   });
   $('#s-motion').addEventListener('change', (e) => { S.settings.motion = e.target.checked; save(); applyMotion(); revealOnScroll(); toast(e.target.checked ? 'Motion effects on' : 'Motion effects off'); });
-  $('#s-read').addEventListener('change', (e) => { S.settings.readAloud = e.target.checked; save(); if (e.target.checked) speak('Read aloud is on.'); });
-  $('#s-rate').addEventListener('change', (e) => { S.settings.rate = e.target.value; save(); speak('This is how questions will sound.'); });
+  $('#s-read').addEventListener('change', (e) => { S.settings.readAloud = e.target.checked; save(); if (e.target.checked) sayVoiceSample(curVoice()); });
+  $('#s-rate').addEventListener('change', (e) => { S.settings.rate = e.target.value; save(); sayVoiceSample(curVoice()); });
+  function renderVoices() {
+    const cur = curVoice();
+    $('#voice-list').innerHTML = VOICES.filter((v) => v.id !== 'device' || synth).map((v) => `
+      <div class="voice-row"><input type="radio" name="voice" id="v-${v.id}" value="${v.id}"${v.id === cur ? ' checked' : ''}>
+        <label for="v-${v.id}"><span class="voice-av" style="background:${v.color}" aria-hidden="true">${v.id === 'device' ? icon('speaker').replace('class="i"', 'class="i" style="width:18px;height:18px"') : v.name[0]}</span>
+          <span><span class="voice-name">${esc(v.name)}</span><span class="voice-desc">${esc(v.desc)}</span></span>
+          <span class="voice-check">${icon('check')}</span></label>
+        <button class="icon-btn" type="button" data-sample="${v.id}" aria-label="Play a sample of ${esc(v.name)}">${icon('speaker')}</button></div>`).join('');
+    updateVoiceDownload();
+  }
+  $('#voice-list').addEventListener('change', (e) => {
+    if (e.target.name !== 'voice') return;
+    S.settings.voice = e.target.value; save();
+    sayVoiceSample(e.target.value);
+    updateVoiceDownload();
+  });
+  $('#voice-list').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-sample]'); if (!b) return;
+    $$('#voice-list .playing').forEach((x) => x.classList.remove('playing'));
+    b.classList.add('playing');
+    await sayVoiceSample(b.dataset.sample);
+    setTimeout(() => b.classList.remove('playing'), 2500);
+  });
+  // Offline: fetch every clip of the chosen voice so the service worker caches them.
+  const voiceClips = (v) => [...QUESTIONS.flatMap((q) => [clipUrl(qClip(q), v), clipUrl(aClip(q), v)]), clipUrl('sample', v)];
+  let dlBusy = false;
+  async function updateVoiceDownload() {
+    const v = curVoice(), wrap = $('#voice-dl-wrap');
+    const can = v !== 'device' && location.protocol === 'https:' && 'caches' in window && navigator.serviceWorker && navigator.serviceWorker.controller;
+    wrap.hidden = !can;
+    if (!can || dlBusy) return;
+    const urls = voiceClips(v);
+    let have = 0;
+    for (const u of urls) if (await caches.match(u)) have++;
+    if (curVoice() !== v || dlBusy) return;
+    const done = have === urls.length;
+    $('#voice-dl-label').textContent = done ? `${VOICES.find((x) => x.id === v).name} is ready offline` : 'Download this voice for offline use';
+    $('#voice-dl-status').textContent = done ? '✓' : have ? `${Math.round((have / urls.length) * 100)}%` : 'about 5 MB';
+    $('#btn-voice-dl').disabled = done;
+  }
+  $('#btn-voice-dl').addEventListener('click', async () => {
+    if (dlBusy) return;
+    dlBusy = true;
+    const v = curVoice(), urls = voiceClips(v);
+    let n = 0, failed = 0;
+    const status = $('#voice-dl-status');
+    $('#voice-dl-label').textContent = 'Downloading…';
+    const worker = async () => {
+      while (urls.length) {
+        const u = urls.shift();
+        try { if (!(await caches.match(u))) { const r = await fetch(u); if (!r.ok) failed++; } } catch (e) { failed++; }
+        n++; status.textContent = `${n} / ${n + urls.length}`;
+      }
+    };
+    await Promise.all([worker(), worker(), worker(), worker()]);
+    dlBusy = false;
+    toast(failed ? 'Some clips could not be downloaded. Try again when online.' : 'Voice ready for offline use');
+    updateVoiceDownload();
+  });
+
   const dlg = $('#dlg-reset');
   function doReset(clearOfficials) {
     const keep = { settings: S.settings, officials: clearOfficials ? {} : S.officials };
@@ -1492,12 +1665,12 @@ const QUESTIONS = [
       if ((k === ' ' || k === 'Enter') && !onControl) { e.preventDefault(); setFlip(!flipped); }
       else if (k === 'ArrowRight') { e.preventDefault(); answerCard(true); }
       else if (k === 'ArrowLeft') { e.preventDefault(); answerCard(false); }
-      else if (k === 's' || k === 'S') speak(flipped ? spokenAnswer(BY_ID.get(S.cur)) : BY_ID.get(S.cur).question);
+      else if (k === 's' || k === 'S') { if (flipped) sayAnswer(BY_ID.get(S.cur)); else sayQuestion(BY_ID.get(S.cur)); }
     } else if (current === 'test' && S.test && !S.test.done) {
       if ((k === ' ' || k === 'Enter') && !onControl && !S.test.revealed) { e.preventDefault(); reveal(); }
       else if (k === 'ArrowRight' && S.test.revealed) { e.preventDefault(); testAnswer(true); }
       else if (k === 'ArrowLeft' && S.test.revealed) { e.preventDefault(); testAnswer(false); }
-      else if (k === 's' || k === 'S') speak(BY_ID.get(S.test.ids[S.test.i]).question);
+      else if (k === 's' || k === 'S') sayQuestion(BY_ID.get(S.test.ids[S.test.i]));
     }
   });
 
