@@ -633,7 +633,7 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
@@ -978,7 +978,7 @@ const QUESTIONS = [
       if (!cq.length) return '';
       const m = counts(cq).mastered;
       const p = Math.round((m / cq.length) * 100);
-      return `<button class="card cat" type="button" data-cat="${esc(cat)}" aria-label="${esc(cat)}: ${cq.length} questions, ${p}% mastered. Study this category.">
+      return `<button class="card cat" type="button" data-cat="${esc(cat)}">
         <span class="cat-ico">${icon(CAT_ICON[cat] || 'cards')}</span>
         <span class="cat-name">${esc(cat)}</span>
         <span class="cat-meta">${cq.length} questions · ${p}% mastered</span>
