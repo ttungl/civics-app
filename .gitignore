@@ -4,3 +4,6 @@ node_modules/
 tools/qa/shot-*.png
 tools/qa/qa-results.json
 tools/qa/live-profile/
+__pycache__/
+.ttsenv/
+.kokoro/

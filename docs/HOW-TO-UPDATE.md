@@ -50,6 +50,9 @@ The whole app lives in one file, **`index.html`**. To change an answer you:
 
 ---
 
+### About the recorded voices
+After you change an answer, the Heart, Bella, Michael, and Fenrir voices **automatically switch to the device's own voice for that answer**, so nobody hears the old name. To get the recorded voice back for it, ask a developer to run `tools/tts/generate_audio.py` (see the README; it re-records only what changed, in a few seconds, free).
+
 ## Other common edits
 
 **Fix wording in a "Remember it" tip:** search for a few words of the tip and edit the text inside the quotes after `"explanation":`.

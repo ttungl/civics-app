@@ -1,8 +1,11 @@
 /* Civics service worker.
  * To publish an update: change VERSION below (e.g. 1.0.1), then upload.
  * Browsers see the changed file, install the new version, and remove the old cache. */
-const VERSION = '1.2.1';
+const VERSION = '1.3.0';
 const CACHE = 'civics-' + VERSION;
+// Recorded voices live in their own cache so app updates don't delete them.
+// Change AUDIO_CACHE only after re-recording clips (tools/tts/generate_audio.py).
+const AUDIO_CACHE = 'n400-audio-1';
 const ASSETS = [
   './',
   'index.html',
@@ -30,7 +33,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('civics-') && k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => (k.startsWith('civics-') && k !== CACHE) || (k.startsWith('n400-audio-') && k !== AUDIO_CACHE)).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -58,6 +61,17 @@ self.addEventListener('fetch', (event) => {
           return res;
         })
         .catch(() => caches.match('index.html').then((r) => r || caches.match('./')))
+    );
+    return;
+  }
+
+  // Recorded voice clips: cache first, in the long-lived audio cache.
+  if (url.pathname.includes('/audio/')) {
+    event.respondWith(
+      caches.open(AUDIO_CACHE).then((cache) => cache.match(req).then((hit) => hit || fetch(req).then((res) => {
+        if (res && res.status === 200) cache.put(req, res.clone());
+        return res;
+      })))
     );
     return;
   }

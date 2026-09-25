@@ -30,6 +30,31 @@ A free, private web app for studying all **128 questions of the official USCIS 2
 
 After your first visit the app works **offline**, including in airplane mode.
 
+## Voices for reading aloud
+
+Turn on **Settings › Read questions aloud**, then pick a voice under **Settings › Voice**:
+
+| Voice | Kokoro voice | Sound |
+|---|---|---|
+| Heart (default) | `af_heart` | female, warm and natural |
+| Bella | `af_bella` | female, bright and friendly |
+| Michael | `am_michael` | male, clear and steady |
+| Fenrir | `am_fenrir` | male, deep and confident |
+| Device voice | the phone or computer's built-in voice | |
+
+The voices come from **[Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)**, a free, open-source speech model (Apache-2.0 license). No account or API key is needed. Every question and answer is **recorded ahead of time** into `audio/<voice>/` and served with the app, so nothing is sent anywhere while studying, and clips work offline once played or downloaded (Settings › *Download this voice for offline use*, about 5 MB). Answers people type in themselves (their senators, governor, and so on) are read by the device voice.
+
+**Re-recording the audio** (for example after changing an answer), on a Mac or Linux computer:
+
+```
+python3 -m venv .ttsenv && .ttsenv/bin/pip install kokoro-onnx soundfile   # once
+mkdir -p .kokoro && cd .kokoro && curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx \
+  && curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin && cd ..   # once, ~350 MB
+.ttsenv/bin/python tools/tts/generate_audio.py
+```
+
+It needs `ffmpeg` (`brew install ffmpeg`). It records only missing clips and deletes out-of-date ones. Each file name contains a hash of its text, so if an answer is edited and not re-recorded, the app automatically uses the device voice for that answer instead of playing an old recording. A full run of all four voices takes about 15–20 minutes on a laptop. (`.ttsenv/` and `.kokoro/` are git-ignored.)
+
 ## Keeping time-sensitive answers current
 
 Some answers change after elections or appointments (the President, the Vice President, the Speaker of the House, and the Chief Justice). The app shows the names from **uscis.gov/citizenship/testupdates**, with the date they were checked.
@@ -59,6 +84,7 @@ logo-mark.webp, logo-wordmark.webp   logo pieces for the Home brand row
 apple-touch-icon.png   iPhone home-screen icon (180×180)
 icon-192.png, icon-512.png, icon-maskable-512.png   Android/desktop install icons
 og-image.png           link preview image (1200×630)
+audio/<voice>/         pre-recorded Kokoro voice clips (q###-hash.mp3, a###-hash.mp3, sample.mp3)
 404.html               "page not found" page
 docs/                  design spec, dataset report, QA report, update guide
 tools/                 source PDF text, parser, dataset builder, content verifier, logo source and link-preview template
@@ -71,6 +97,7 @@ tools/                 source PDF text, parser, dataset builder, content verifie
   `python3 tools/parse_pdf.py && python3 tools/build_data.py`
   (explanations live in `tools/explanations.json`, and flags and current officials live in `tools/build_data.py`).
 * Check content against the PDF: `python3 tools/verify_content.py`
+* Re-record voice clips after changing any question or answer: `python3 tools/tts/generate_audio.py` (see *Voices* above)
 
 ## Sources
 
