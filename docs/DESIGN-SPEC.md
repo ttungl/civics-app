@@ -173,3 +173,21 @@ Font stack: `-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Robot
 * The background is the same blue gradient with a subtle large star watermark at the right.
 * On the left: the icon (160 px), then "Civics" (96 px bold white), then "Study all 128 USCIS citizenship test questions." (40 px, 85% white), then a pill "Free · No sign-up · Works offline."
 * Title tag: "Civics — U.S. Citizenship Test Flashcards (2025)". Description: "Free, private flashcards and practice tests for all 128 questions of the 2025 USCIS civics test. Works offline, no sign-up."
+
+## 13. Color & motion update (v1.1)
+Inspired by the soft-gradient, animated style of modern AI product sites (e.g. ElevenLabs). The base stays calm and Apple-like: color is added to headings, key actions, and progress, never to body text or answers.
+
+| Element | Treatment |
+|---|---|
+| Home hero | New headline, "Pass your **citizenship test** with confidence.", with the phrase in animated gradient text. The words blur in one by one (80 ms stagger, 700 ms). Four pastel gradient orbs drift behind it (18–26 s loops), masked to fade on every edge. The greeting sits above it as a small line. |
+| Gradient text | `--grad-text`: blue → violet → pink → orange → blue. It shimmers slowly (14 s loop) on screen titles, the hero phrase, and test results, and stays static on the progress %. It's used only at large sizes, where every stop is ≥ 3:1 (light orange darkened to `#C2410C`). |
+| Light / dark stops | `#2563EB #7C3AED #DB2777 #C2410C` / `#60A5FA #A78BFA #F472B6 #FB923C` |
+| Primary buttons, selected chips, selected sidebar tab | `--grad-btn`: `#2563EB → #7C3AED → #A21CAF` with white text (≥ 4.7:1), a soft violet glow, and a one-time light sweep (on load and on hover) |
+| Tab bar (mobile) | The selected icon is stroked with the brand gradient |
+| Progress | The ring and progress bars use the gradient |
+| Category cards | Each has its own colored icon tile (blue/indigo, orange/rose, violet/pink). They lift on hover and fade up on scroll. |
+| Flashcard & test card | A 1.5 px conic-gradient edge that spins once when the card flips |
+| Passing a test | A confetti burst (110 pieces, about 3 s, removed afterwards) |
+| Scroll reveals | Cards and notices below the fold fade up as they enter the view |
+
+**Motion controls (WCAG 2.2.2 / 2.3.3):** a *Settings › Motion effects* switch (on by default) stops every decorative animation: orbs, shimmer, word reveal, sweep, card spin, and confetti. The same "calm" mode turns on automatically when the device has Reduce Motion enabled, and it updates live if that setting changes. Gradient text falls back to solid text where `background-clip: text` isn't supported and in Windows High Contrast (forced colors).

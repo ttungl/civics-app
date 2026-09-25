@@ -318,6 +318,87 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media (min-width:900px){.toast{left:calc(50% + 120px);bottom:32px}}
 
+
+/* ---------- Color & motion (v1.1) ---------- */
+:root{--g1:#2563eb;--g2:#7c3aed;--g3:#db2777;--g4:#c2410c;
+  --grad-text:linear-gradient(90deg,var(--g1),var(--g2),var(--g3),var(--g4),var(--g1));
+  --grad-btn:linear-gradient(120deg,#2563eb 0%,#7c3aed 55%,#a21caf 100%);
+  --orb1:rgba(59,130,246,.40);--orb2:rgba(168,85,247,.34);--orb3:rgba(251,146,60,.32);--orb4:rgba(236,72,153,.26)}
+@media (prefers-color-scheme:dark){:root{--g1:#60a5fa;--g2:#a78bfa;--g3:#f472b6;--g4:#fb923c;
+  --orb1:rgba(37,99,235,.42);--orb2:rgba(124,58,237,.38);--orb3:rgba(234,88,12,.26);--orb4:rgba(219,39,119,.30)}}
+@keyframes shimmer{to{background-position:200% 0}}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .grad-text,.large-title,.result-hero h2,.ring-pct{background:var(--grad-text);background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .grad-text,.large-title,.result-hero h2{animation:shimmer 14s linear infinite}
+}
+@media (forced-colors:active){.grad-text,.large-title,.result-hero h2,.ring-pct{background:none!important;color:CanvasText!important;-webkit-text-fill-color:CanvasText!important}}
+.large-title{width:fit-content;max-width:100%}
+.about-hero .large-title{margin-left:auto;margin-right:auto}
+
+/* Hero */
+.hero{position:relative;isolation:isolate;padding:10px 0 22px}
+.orbs{position:absolute;z-index:-1;pointer-events:none;overflow:hidden;
+  top:calc(-1 * (var(--topbar-h) + var(--sat) + 24px));left:calc(-1 * var(--gutter));right:calc(-1 * var(--gutter));height:calc(100% + var(--topbar-h) + var(--sat) + 90px);
+  -webkit-mask-image:radial-gradient(closest-side ellipse at 50% 50%,#000 35%,transparent 100%);mask-image:radial-gradient(closest-side ellipse at 50% 50%,#000 35%,transparent 100%)}
+.orb{position:absolute;width:320px;height:320px;border-radius:50%;will-change:transform;animation:drift 18s ease-in-out infinite alternate}
+.o1{background:radial-gradient(circle,var(--orb1),transparent 68%);left:-90px;top:0}
+.o2{background:radial-gradient(circle,var(--orb2),transparent 68%);right:-100px;top:-30px;animation-duration:22s;animation-delay:-7s}
+.o3{background:radial-gradient(circle,var(--orb3),transparent 68%);left:28%;top:130px;animation-duration:26s;animation-delay:-13s}
+.o4{background:radial-gradient(circle,var(--orb4),transparent 68%);right:8%;top:170px;width:240px;height:240px;animation-duration:20s;animation-delay:-3s}
+@media (min-width:900px){.orb{width:460px;height:460px}.o4{width:340px;height:340px}.orbs{top:-110px;height:calc(100% + 190px)}}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}33%{transform:translate(46px,28px) scale(1.12)}66%{transform:translate(-34px,52px) scale(.9)}100%{transform:translate(22px,-24px) scale(1.06)}}
+.greet{font-size:.9375rem;font-weight:600;color:var(--label-2)}
+.hero-title{font-size:clamp(2.125rem,1.35rem + 3.4vw,3.125rem);line-height:1.08;font-weight:800;letter-spacing:-.035em;margin-top:6px}
+.hero .subtitle{margin-top:10px;font-size:1.0625rem}
+.w{display:inline-block;animation:wordIn .7s var(--ease) both;animation-delay:calc(var(--i,0) * 80ms + 60ms)}
+.nw{white-space:nowrap}
+@keyframes wordIn{from{opacity:0;filter:blur(10px);transform:translateY(14px)}}
+.stag{animation:rise .6s var(--ease) both;animation-delay:calc(var(--i,0) * 70ms + 200ms)}
+.sr{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.sr.in{opacity:1;transform:none}
+
+/* Buttons, chips, tabs */
+.btn-filled{background:var(--grad-btn);background-size:160% 100%;background-position:0 0;color:#fff;position:relative;overflow:hidden;
+  box-shadow:0 8px 22px -10px rgba(124,58,237,.7);transition:background-position .5s var(--ease),transform .1s,box-shadow .3s}
+.btn-filled:hover{background-position:100% 0;box-shadow:0 10px 28px -10px rgba(124,58,237,.85)}
+.btn-filled::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.42) 50%,transparent 65%);transform:translateX(-130%);animation:shine 1.3s var(--ease) .9s both}
+.btn-filled:hover::after{animation:shine 1s var(--ease)}
+@keyframes shine{to{transform:translateX(130%)}}
+.chip[aria-pressed="true"]{background:var(--grad-btn);color:#fff;box-shadow:0 6px 16px -8px rgba(124,58,237,.7)}
+@media (max-width:899px){.tab[aria-current="page"] svg.i{stroke:url(#g-brand)}}
+@media (min-width:900px){.tab[aria-current="page"]{background:var(--grad-btn);color:#fff}.tab[aria-current="page"] svg.i{color:#fff}}
+
+/* Progress & categories */
+.ring-fill{stroke:url(#ringGrad)}
+.cat{transition:transform .25s var(--ease),box-shadow .25s}
+.cat:hover{transform:translateY(-3px);box-shadow:var(--shadow-2)}
+.cat .cat-ico{color:#fff;background:linear-gradient(135deg,#3b82f6,#6366f1)}
+.cat.c1 .cat-ico{background:linear-gradient(135deg,#f97316,#e11d48)}
+.cat.c2 .cat-ico{background:linear-gradient(135deg,#a855f7,#ec4899)}
+.cat .bar>span,#study-bar{background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3))}
+
+/* Flashcard & test card: colorful edge */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:135deg}
+.face,.test-card{border:1.5px solid transparent;
+  background:linear-gradient(var(--card),var(--card)) padding-box,conic-gradient(from var(--ang),var(--g1),var(--g2),var(--g3),var(--g4),var(--g1)) border-box}
+.fc.flipped .face{animation:spin 1.1s var(--ease)}
+@keyframes spin{from{--ang:135deg}to{--ang:495deg}}
+.hero-ico{background:var(--grad-btn);color:#fff}
+.result-hero.pass .big{background:var(--grad-btn);color:#fff}
+
+/* Confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.confetti i{position:absolute;top:-24px;left:var(--x);border-radius:2px;animation:fall var(--d) cubic-bezier(.25,.6,.4,1) var(--delay) forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r))}}
+
+/* Motion off: Settings > Motion effects, or the device's Reduce Motion */
+html.calm .orb,html.calm .grad-text,html.calm .large-title,html.calm .result-hero h2,html.calm .w,html.calm .stag,
+html.calm .btn-filled::after,html.calm .fc.flipped .face,html.calm .screen{animation:none!important}
+html.calm .sr{opacity:1;transform:none;transition:none}
+html.calm .confetti{display:none}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
   .fc-inner,.fc.flipped .fc-inner{transform:none!important}
@@ -325,12 +406,16 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
   .face.back{transform:none;opacity:0;visibility:hidden}
   .fc.flipped .face.front{opacity:0;visibility:hidden}
   .fc.flipped .face.back{opacity:1;visibility:visible}
+  .orb,.grad-text,.large-title,.result-hero h2,.w,.stag,.btn-filled::after,.fc.flipped .face{animation:none!important}
+  .sr{opacity:1;transform:none}
+  .confetti{display:none}
 }
 </style>
 </head>
 <body>
 <a class="skip" href="#main" id="skip">Skip to content</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs><linearGradient id="g-brand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset=".55" style="stop-color:var(--g2)"/><stop offset="1" style="stop-color:var(--g3)"/></linearGradient></defs>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></symbol>
   <symbol id="i-cards" viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="13" rx="2.5"/><path d="M7 4h11.5A2.5 2.5 0 0 1 21 6.5V16"/></symbol>
   <symbol id="i-test" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="m8 9 1.5 1.5L12 8M8 15l1.5 1.5L12 14M14.5 9.5H17M14.5 15.5H17"/></symbol>
@@ -377,14 +462,16 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 
 <!-- HOME -->
 <section class="screen" id="screen-home" data-title="Civics" aria-labelledby="h-home" hidden>
-  <div class="lt">
-    <h1 class="large-title" id="h-home" tabindex="-1">Welcome</h1>
-    <p class="subtitle">Let’s get you ready for your citizenship interview.</p>
+  <div class="hero">
+    <div class="orbs" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span></div>
+    <p class="greet w" id="greet">Welcome</p>
+    <h1 class="hero-title" id="h-home" tabindex="-1"><span class="w" style="--i:1">Pass</span> <span class="w" style="--i:2">your</span> <span class="w nw" style="--i:3"><span class="grad-text">citizenship test</span></span> <span class="w" style="--i:4">with</span> <span class="w" style="--i:5">confidence.</span></h1>
+    <p class="subtitle w" style="--i:7">All 128 official USCIS questions. Free, private, and works offline.</p>
     <span class="pill" id="home-6520" hidden><svg class="i" aria-hidden="true"><use href="#i-star"/></svg>65/20 mode · 20 questions</span>
   </div>
-  <div class="card progress-card">
+  <div class="card progress-card stag" style="--i:6">
     <div class="ring" role="img" id="ring" aria-label="0% mastered">
-      <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg>
+      <svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset=".5" style="stop-color:var(--g2)"/><stop offset="1" style="stop-color:var(--g3)"/></linearGradient></defs><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg>
       <div class="ring-label" aria-hidden="true"><span class="ring-pct" id="ring-pct">0%</span><span class="ring-sub">mastered</span></div>
     </div>
     <dl class="stats">
@@ -393,18 +480,18 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
       <div><dt><span class="dot new"></span>New</dt><dd id="st-n">128</dd></div>
     </dl>
   </div>
-  <div class="home-actions">
+  <div class="home-actions stag" style="--i:8">
     <a class="btn btn-filled" href="#study" id="btn-continue">Start studying</a>
     <a class="btn btn-tinted" href="#test">Take a practice test</a>
   </div>
-  <a class="card notice" id="nudge" href="#settings" style="text-decoration:none;color:inherit">
+  <a class="card notice sr" id="nudge" href="#settings" style="text-decoration:none;color:inherit">
     <svg class="i ico" aria-hidden="true"><use href="#i-pin"/></svg>
     <p><strong>Add your state’s officials</strong><span style="color:var(--label-2)">4 questions depend on where you live. Save your answers once and they appear on your cards.</span></p>
     <svg class="i chev" aria-hidden="true"><use href="#i-chev-r"/></svg>
   </a>
-  <h2 class="section-h">Categories</h2>
+  <h2 class="section-h sr">Categories</h2>
   <div class="cat-grid" id="cat-grid"></div>
-  <div class="card notice warn">
+  <div class="card notice warn sr">
     <svg class="i ico" aria-hidden="true"><use href="#i-info"/></svg>
     <p><strong>Some answers change after elections</strong><span style="color:var(--label-2)">Before your interview, check <a href="https://www.uscis.gov/citizenship/testupdates" target="_blank" rel="noopener">uscis.gov/citizenship/testupdates</a>.</span></p>
   </div>
@@ -566,9 +653,11 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
   <div class="list" role="group" aria-labelledby="g-study">
     <div class="field sw-row"><label for="s-6520">65/20 mode</label><input class="switch" type="checkbox" role="switch" id="s-6520" aria-describedby="s-6520-d"></div>
     <div class="field sw-row"><label for="s-read">Read questions aloud</label><input class="switch" type="checkbox" role="switch" id="s-read"></div>
+    <div class="field sw-row"><label for="s-motion">Motion effects</label><input class="switch" type="checkbox" role="switch" id="s-motion" aria-describedby="s-motion-d"></div>
     <div class="field"><label for="s-rate">Speaking speed</label><select id="s-rate"><option value="normal">Normal</option><option value="slow">Slow</option></select></div>
   </div>
   <p class="footnote group-f" id="s-6520-d">65/20 mode: if you are 65 or older and have been a permanent resident for 20+ years, you only need the 20 questions marked ★. The officer asks 10 and you need 6 correct.</p>
+  <p class="footnote group-f" id="s-motion-d">Motion effects: moving colors, animated text, and confetti. Turn this off for a calmer screen. It also switches off automatically when your device’s Reduce Motion setting is on.</p>
   <p class="footnote group-f" id="speech-note" hidden>Read aloud isn’t available in this browser.</p>
 
   <h2 class="group-h" id="g-data">Data</h2>
@@ -589,7 +678,7 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
     <h1 class="large-title" id="h-about" tabindex="-1">Civics</h1>
     <p class="footnote">Version <span id="app-version"></span></p>
   </div>
-  <div class="disclaimer">Free study tool. Not affiliated with or endorsed by USCIS or the U.S. government.</div>
+  <div class="disclaimer sr">Free study tool. Not affiliated with or endorsed by USCIS or the U.S. government.</div>
   <h2 class="group-h">Source</h2>
   <div class="card prose" style="padding:16px">
     <p>All 128 questions and answers come word for word from the official <strong>USCIS 2025 Civics Test: 128 Civics Questions and Answers</strong> (form M-1778, 09/25). The “Remember it” notes are plain-language study tips written for this app.</p>
@@ -633,7 +722,7 @@ dialog p{font-size:.9375rem;color:var(--label-2);text-align:center;margin:8px 0 
 //  To update an official's name, edit "currentAnswers" below.
 // ============================================================
 const CONTENT_VERIFIED = 'September 24, 2026';
-const APP_VERSION = '1.0.4';
+const APP_VERSION = '1.1.0';
 // BEGIN QUESTIONS
 const QUESTIONS = [
   {"id": 1, "category": "American Government", "subcategory": "Principles of American Government", "question": "What is the form of government of the United States?", "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"], "isSpecialConsideration": false, "isTimeSensitive": false, "isLocationDependent": false, "explanation": "The U.S. is a republic: citizens elect people to represent them and make decisions for them."},
@@ -787,7 +876,7 @@ const QUESTIONS = [
   // ---------- Storage (fails safely) ----------
   const KEY = 'civics:v1';
   let storageOK = true;
-  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal' }, officials: {}, deck: 'all', cur: null, test: null });
+  const fresh = () => ({ v: 1, p: {}, step: 0, settings: { m6520: false, readAloud: false, rate: 'normal', motion: true }, officials: {}, deck: 'all', cur: null, test: null });
   function readStore() {
     try {
       localStorage.setItem('civics:t', '1'); localStorage.removeItem('civics:t');
@@ -925,6 +1014,35 @@ const QUESTIONS = [
     if (b) { e.preventDefault(); go(b.dataset.go); }
   });
 
+  // ---------- Motion: scroll reveals & confetti ----------
+  const motionOK = () => S.settings.motion !== false && !reduceMotion();
+  function applyMotion() { document.documentElement.classList.toggle('calm', !motionOK()); }
+  let revealIO = null;
+  function revealOnScroll() {
+    const els = $$('.sr:not(.in)');
+    if (!motionOK() || !('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('in')); return; }
+    if (!revealIO) revealIO = new IntersectionObserver((ents) => ents.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('in'); revealIO.unobserve(en.target); }
+    }), { rootMargin: '0px 0px -8% 0px' });
+    els.forEach((e) => revealIO.observe(e));
+  }
+  function confetti() {
+    if (!motionOK()) return;
+    const box = document.createElement('div');
+    box.className = 'confetti'; box.setAttribute('aria-hidden', 'true');
+    const colors = ['#2563eb', '#7c3aed', '#db2777', '#f97316', '#16a34a', '#facc15', '#06b6d4'];
+    let h = '';
+    for (let i = 0; i < 110; i++) {
+      const r = Math.random;
+      h += `<i style="--x:${(r() * 100).toFixed(1)}vw;--dx:${((r() - .5) * 36).toFixed(1)}vw;--r:${Math.round(r() * 1080 - 540)}deg;--d:${(1.8 + r() * 1.6).toFixed(2)}s;--delay:${(r() * .5).toFixed(2)}s;background:${colors[i % colors.length]};width:${6 + Math.round(r() * 6)}px;height:${8 + Math.round(r() * 9)}px${r() < .35 ? ';border-radius:50%' : ''}"></i>`;
+    }
+    box.innerHTML = h;
+    document.body.appendChild(box);
+    setTimeout(() => box.remove(), 4200);
+  }
+  if (window.matchMedia) { const mq = matchMedia('(prefers-reduced-motion: reduce)'); if (mq.addEventListener) mq.addEventListener('change', applyMotion); }
+  applyMotion();
+
   // ---------- Router ----------
   const SCREENS = ['home', 'study', 'test', 'review', 'settings', 'about'];
   let current = null;
@@ -943,6 +1061,7 @@ const QUESTIONS = [
     $('#back').hidden = name !== 'about';
     document.title = name === 'home' ? 'Civics — U.S. Citizenship Test Flashcards (2025)' : `${sec.dataset.title} · Civics`;
     RENDER[name]();
+    revealOnScroll();
     if (changed) window.scrollTo(0, 0);
     observeTitle(sec.querySelector('h1'));
     if (focus) { const h = sec.querySelector('h1'); if (h) h.focus({ preventScroll: true }); }
@@ -961,7 +1080,7 @@ const QUESTIONS = [
   // ---------- Home ----------
   function renderHome() {
     const h = new Date().getHours();
-    $('#h-home').textContent = h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+    $('#greet').textContent = h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
     const qs = pool();
     const c = counts(qs);
     const pct = Math.round((c.mastered / qs.length) * 100);
@@ -978,12 +1097,13 @@ const QUESTIONS = [
       if (!cq.length) return '';
       const m = counts(cq).mastered;
       const p = Math.round((m / cq.length) * 100);
-      return `<button class="card cat" type="button" data-cat="${esc(cat)}">
+      return `<button class="card cat c${CATS.indexOf(cat)} sr" type="button" data-cat="${esc(cat)}" style="transition-delay:${CATS.indexOf(cat) * 80}ms">
         <span class="cat-ico">${icon(CAT_ICON[cat] || 'cards')}</span>
         <span class="cat-name">${esc(cat)}</span>
         <span class="cat-meta">${cq.length} questions · ${p}% mastered</span>
         <span class="bar"><span style="width:${p}%"></span></span></button>`;
     }).join('');
+    revealOnScroll();
   }
   $('#cat-grid').addEventListener('click', (e) => {
     const b = e.target.closest('[data-cat]'); if (!b) return;
@@ -1186,6 +1306,7 @@ const QUESTIONS = [
     const r = rules(t), c = tally(t);
     if (c.ok >= r.pass || c.no >= r.failAt || t.res.length >= r.total) {
       t.done = true; t.passed = c.ok >= r.pass;
+      if (t.passed) setTimeout(confetti, 250);
       stopSpeech(); save(); renderTest();
       $('#result-h').focus({ preventScroll: true }); window.scrollTo(0, 0);
       return;
@@ -1305,6 +1426,7 @@ const QUESTIONS = [
     });
     $('#s-6520').checked = !!S.settings.m6520;
     $('#s-read').checked = !!S.settings.readAloud;
+    $('#s-motion').checked = S.settings.motion !== false;
     $('#s-read').disabled = !synth;
     $('#s-rate').value = S.settings.rate;
     $('#s-rate').disabled = !synth;
@@ -1315,6 +1437,7 @@ const QUESTIONS = [
     S.settings.m6520 = e.target.checked; S.cur = null; if (S.deck === 'star') S.deck = 'all'; save();
     toast(e.target.checked ? '65/20 mode on · 20 questions' : '65/20 mode off · 128 questions');
   });
+  $('#s-motion').addEventListener('change', (e) => { S.settings.motion = e.target.checked; save(); applyMotion(); revealOnScroll(); toast(e.target.checked ? 'Motion effects on' : 'Motion effects off'); });
   $('#s-read').addEventListener('change', (e) => { S.settings.readAloud = e.target.checked; save(); if (e.target.checked) speak('Read aloud is on.'); });
   $('#s-rate').addEventListener('change', (e) => { S.settings.rate = e.target.value; save(); speak('This is how questions will sound.'); });
   const dlg = $('#dlg-reset');
